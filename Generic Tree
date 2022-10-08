@@ -12,6 +12,12 @@ public:
   vector<TreeNode<T> *> children;
 
   TreeNode(T data) { this->data = data; }
+
+  ~TreeNode() {
+    for (int i = 0; i < children.size(); i++) {
+      delete children[i];
+    }
+  }
 };
 // print function
 void printTree(TreeNode<int> *root) {
@@ -70,10 +76,92 @@ TreeNode<int> *takeInputLevelWise() {
   }
   return root;
 }
-int main() {
 
+// printlevel wise
+void printLevelWise(TreeNode<int> *root) {
+  if (root == NULL) {
+    return;
+  }
+  queue<TreeNode<int> *> q;
+  q.push(root);
+  while (!q.empty()) {
+    TreeNode<int> *f = q.front();
+    cout << f->data << " : ";
+    q.pop();
+    for (int i = 0; i < f->children.size(); i++) {
+      cout << f->children[i]->data << " ,";
+      q.push(f->children[i]);
+    }
+    cout << endl;
+  }
+}
+
+// cout no ofnodes
+int countNode(TreeNode<int> *root) {
+  if (root == NULL)
+    return 0;
+  int ans = 1;
+  for (int i = 0; i < root->children.size(); ++i) {
+    ans += countNode(root->children[i]);
+  }
+  return ans;
+}
+
+// Height of Tree
+int heightOfTree(TreeNode<int> *root) {
+  if (root == NULL)
+    return 0;
+  int ans = 0;
+  for (int i = 0; i < root->children.size(); ++i) {
+    ans = max(ans, heightOfTree(root->children[i])) + 1;
+  }
+
+  return ans;
+}
+
+// print all node which has depth of k
+void printDepth_K(TreeNode<int> *root, int k) {
+  if (root == NULL || k < 0)
+    return;
+  if (k == 0) {
+    cout << root->data << " , ";
+    return;
+  }
+  for (int i = 0; i < root->children.size(); i++) {
+    printDepth_K(root->children[i], k - 1);
+  }
+}
+
+// countleaf nodes
+int count_Leaf_Node(TreeNode<int> *root) {
+  if (root == NULL)
+    return 0;
+  int ans = 0;
+  if (!root->children.size())
+    return 1;
+  for (int i = 0; i < root->children.size(); ++i) {
+    ans += count_Leaf_Node(root->children[i]);
+  }
+  return ans;
+}
+
+// PreOrder traverse
+void preOrderPrint(TreeNode<int> *root) {
+  if (root == NULL)
+    return;
+  cout << root->data << ",";
+  for (int i = 0; i < root->children.size(); ++i) {
+    preOrderPrint(root->children[i]);
+  }
+}
+
+int main() {
+  cout << "";
   TreeNode<int> *root = takeInputLevelWise();
+  // printLevelWise(root);
   printTree(root);
+  cout << endl;
+  preOrderPrint(root);
 
   return 0;
 }
