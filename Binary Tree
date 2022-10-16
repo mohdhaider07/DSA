@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+// BINARY TREE
+
 // Class TreeNode
 template <typename T>
 class TreeNode
@@ -12,29 +14,107 @@ public:
     TreeNode(T x) : val(x), left(NULL), right(NULL) {}
 };
 
-// void function to print the tree recursively
-void printTree(TreeNode<int> *root)
+void printTree(TreeNode<int> *root) // void function to print the tree recursively
 {
     if (root == NULL)
         return;
-    cout << root->val << " ";
+    cout << root->val << ":";
     if (root->left != NULL)
-        cout << "L " << root->left->val << " ";
+        cout << "L" << root->left->val << " ";
     if (root->right != NULL)
-        cout << "R " << root->right->val << " ";
+        cout << "R" << root->right->val << " ";
     cout << endl;
     printTree(root->left);
     printTree(root->right);
 }
 
+TreeNode<int> *takeInput() // take input recursively
+{
+    int rootData;
+    cout << "Enter Data : ";
+    cin >> rootData;
+    if (rootData == -1)
+    {
+        return NULL;
+    }
+    TreeNode<int> *root = new TreeNode<int>(rootData);
+    cout << rootData << "\nLeft =>";
+    root->left = takeInput();
+    cout << rootData << "\nRight=>";
+    root->right = takeInput();
+    return root;
+}
+// take input level wise
+
+TreeNode<int> *takeInputLevelWise()
+{
+    int rootData;
+    cout << "Enter RootData: ";
+    cin >> rootData;
+    TreeNode<int> *root = new TreeNode<int>(rootData);
+    queue<TreeNode<int> *> pendingNodes;
+    pendingNodes.push(root);
+    while (!pendingNodes.empty())
+    {
+        TreeNode<int> *front = pendingNodes.front();
+        pendingNodes.pop();
+        int leftChild, rightChild;
+        cout << "Enter Left Child of " << front->val;
+        cin >> leftChild;
+        if (leftChild != -1)
+        {
+            TreeNode<int> *child = new TreeNode<int>(leftChild);
+            front->left = child;
+            pendingNodes.push(child);
+        }
+        cout << "Enter Right Child of " << front->val;
+        cin >> rightChild;
+        if (rightChild != -1)
+        {
+            TreeNode<int> *child = new TreeNode<int>(rightChild);
+            front->right = child;
+            pendingNodes.push(child);
+        }
+    }
+    return root;
+}
+
+// level order traversal
+void printLevelWise(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    queue<TreeNode<int> *> pendingNodes;
+    pendingNodes.push(root);
+    pendingNodes.push(NULL);
+    while (!pendingNodes.empty())
+    {
+        if (pendingNodes.front() == NULL)
+        {
+            cout << endl;
+            pendingNodes.pop();
+            if (!pendingNodes.empty())
+                pendingNodes.push(NULL);
+        }
+        TreeNode<int> *front = pendingNodes.front();
+        pendingNodes.pop();
+        cout << front->val << " ";
+        if (front->left)
+        {
+            pendingNodes.push(front->left);
+        }
+        if (front->right)
+        {
+            pendingNodes.push(front->right);
+        }
+    }
+}
 int main()
 {
-    TreeNode<int> *root = new TreeNode<int>(1);
-    TreeNode<int> *n1 = new TreeNode<int>(2);
-    TreeNode<int> *n2 = new TreeNode<int>(3);
-    root->left = n1;
-    n1->right = n2;
-    // root->right = n2;
-    printTree(root);
+    TreeNode<int> *root = takeInputLevelWise();
+    printLevelWise(root);
     return 0;
 }
+// 2 3 10 5 4 12 15 13 17 18
