@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+// Class TreeNode
+template <typename T>
+class TreeNode
+{
+public:
+    T val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(T x) : val(x), left(NULL), right(NULL) {}
+};
+
+// void function to print the tree recursively
+void printTree(TreeNode<int> *root)
+{
+    if (root == NULL)
+        return;
+    cout << root->val << " ";
+    if (root->left != NULL)
+        cout << "L " << root->left->val << " ";
+    if (root->right != NULL)
+        cout << "R " << root->right->val << " ";
+    cout << endl;
+    printTree(root->left);
+    printTree(root->right);
+}
+
+int main()
+{
+    TreeNode<int> *root = new TreeNode<int>(1);
+    TreeNode<int> *n1 = new TreeNode<int>(2);
+    TreeNode<int> *n2 = new TreeNode<int>(3);
+    root->left = n1;
+    n1->right = n2;
+    // root->right = n2;
+    printTree(root);
+    return 0;
+}
