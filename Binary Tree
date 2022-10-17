@@ -59,7 +59,7 @@ TreeNode<int> *takeInputLevelWise()
         TreeNode<int> *front = pendingNodes.front();
         pendingNodes.pop();
         int leftChild, rightChild;
-        cout << "Enter Left Child of " << front->val;
+        cout << "Enter Left Child of " << front->val << ": ";
         cin >> leftChild;
         if (leftChild != -1)
         {
@@ -67,7 +67,7 @@ TreeNode<int> *takeInputLevelWise()
             front->left = child;
             pendingNodes.push(child);
         }
-        cout << "Enter Right Child of " << front->val;
+        cout << "Enter Right Child of " << front->val << ": ";
         cin >> rightChild;
         if (rightChild != -1)
         {
@@ -111,10 +111,71 @@ void printLevelWise(TreeNode<int> *root)
         }
     }
 }
+
+// count no of nodes
+int countNodes(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+
+        return 0;
+    }
+    int ans = 1;
+    ans += countNodes(root->left);
+    ans += countNodes(root->right);
+    return ans;
+}
+// inorder traversal
+void postOrderTraversal(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    postOrderTraversal(root->left);
+    postOrderTraversal(root->right);
+    cout << root->val << " ";
+}
+// Maximum height
+int height(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    int ans = 0;
+    ans += max(height(root->left), height(root->right)) + 1;
+    return ans;
+}
+// symantric of binanry tree
+bool helper(TreeNode<int> *root1, TreeNode<int> *root2)
+{
+    if (root1 == NULL && root2 == NULL)
+        return true;
+    if (root1 == NULL || root2 == NULL)
+        return false;
+    if (root1->val != root2->val)
+        return false;
+
+    return helper(root1->left, root2->right) && helper(root1->right, root2->left);
+}
+
+bool isSymmetric(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return true;
+    }
+    return helper(root->left, root->right);
+}
 int main()
 {
     TreeNode<int> *root = takeInputLevelWise();
-    printLevelWise(root);
+    cout << "No of Nodes" << countNodes(root);
+    cout << endl;
+    cout << height(root) << endl
+         << "isSymentric : " << isSymmetric(root);
+
     return 0;
 }
-// 2 3 10 5 4 12 15 13 17 18
+// 1 4 4 -1 -1 -1 -1
