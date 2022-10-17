@@ -168,14 +168,96 @@ bool isSymmetric(TreeNode<int> *root)
     }
     return helper(root->left, root->right);
 }
+
+// Find Node
+bool findNode(TreeNode<int> *root, int key)
+{
+    if (root == NULL)
+        return false;
+    if (root->val == key)
+        return true;
+
+    return findNode(root->left, key) || findNode(root->right, key);
+}
+
+// find minimum
+int findMin(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return INT_MAX;
+    }
+    int ans = root->val;
+    ans = min(ans, min(findMin(root->left), findMin(root->right)));
+    return ans;
+}
+
+// finding minimum other way in binary tree
+
+void findMin2(TreeNode<int> *root, int &ans)
+{
+    if (root == NULL)
+        return;
+    ans = min(ans, root->val);
+    findMin2(root->left, ans);
+    findMin2(root->right, ans);
+}
+// finding max value in tree
+int findMax(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return INT_MIN;
+    }
+    int ans = root->val;
+    ans = max(ans, max(findMax(root->left), findMax(root->right)));
+    return ans;
+}
+
+// finding max value other way
+void findMax2(TreeNode<int> *root, int &ans)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    ans = max(ans, root->val);
+    findMax2(root->left, ans);
+    findMax2(root->right, ans);
+}
+//  count Node
+int countNode(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    int ans = 1;
+    ans += countNode(root->left) + countNode(root->right);
+    return ans;
+}
+// count leaf node binary tree
+void countLeafNode2(TreeNode<int> *root, int &ans)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    if (root->left == NULL && root->right == NULL)
+    {
+        ans++;
+    }
+    countLeafNode2(root->left, ans);
+    countLeafNode2(root->right, ans);
+}
+
 int main()
 {
     TreeNode<int> *root = takeInputLevelWise();
-    cout << "No of Nodes" << countNodes(root);
-    cout << endl;
-    cout << height(root) << endl
-         << "isSymentric : " << isSymmetric(root);
-
+    int ans = 0;
+    countLeafNode2(root, ans);
+    cout << "\nNo of Leaf Nodes: " << ans;
     return 0;
 }
-// 1 4 4 -1 -1 -1 -1
+// 1 -1 -1
+// 1 2 3 4 5 6 7 -1 -1 -1 -1 8 -8 -1 -1 -1 -1 -1 -1
