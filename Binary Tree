@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-// binary tree
+// BINARY TREE
 
 // Class TreeNode
 template <typename T>
@@ -251,12 +251,40 @@ void countLeafNode2(TreeNode<int> *root, int &ans)
     countLeafNode2(root->right, ans);
 }
 
+// diameter of binary Tree with pair
+
+pair<int, int> heightDiameter(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        pair<int, int> p;
+        p.first = 0;
+        p.second = 0;
+        return p;
+    }
+    pair<int, int> leftAns = heightDiameter(root->left);
+    pair<int, int> rightAns = heightDiameter(root->right);
+    int option1 = leftAns.first + rightAns.first;
+    int option2 = leftAns.second;
+    int option3 = rightAns.second;
+    int height = max(leftAns.first, rightAns.first) + 1;
+    int diameter = max(option1, max(option2, option3));
+    pair<int, int> p;
+    p.first = height;
+    p.second = diameter;
+    return p;
+}
+
+int diameter(TreeNode<int> *root)
+{
+    pair<int, int> p = heightDiameter(root);
+    return p.second;
+}
 int main()
 {
     TreeNode<int> *root = takeInputLevelWise();
-    int ans = 0;
-    countLeafNode2(root, ans);
-    cout << "\nNo of Leaf Nodes: " << ans;
+
+    cout << "\nDiameter of Tree  " << diameter(root) << endl;
     return 0;
 }
 // 1 -1 -1
