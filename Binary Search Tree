@@ -1,4 +1,4 @@
-  // search in tree recursively
+  // search in tree recursively 
   TreeNode* searchBST(TreeNode* root, int val) {
         if(root==NULL){
             return NULL;
