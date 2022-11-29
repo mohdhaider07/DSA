@@ -1,0 +1,13 @@
+ // finding the number which containing 4  from 1 to N
+ 
+ int countNumberswith4(int N) {
+        // code here
+        int c=0;
+        for(int i=1;i<=N;i++){
+            string str=to_string(i);
+             if(str.find('4')!=string::npos)
+            c++;
+        }
+        return c;
+
+    }
