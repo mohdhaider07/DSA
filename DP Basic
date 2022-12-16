@@ -8,7 +8,7 @@
              if(str.find('4')!=string::npos)
             c++;
         }
-        return c;
+        return c; 
 
     }
      // finding the number which containing 4  from 1 to N end
