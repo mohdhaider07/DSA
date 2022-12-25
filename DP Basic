@@ -7,7 +7,7 @@
             string str=to_string(i);
              if(str.find('4')!=string::npos)
             c++;
-        }
+        } 
         return c; 
 
     }
