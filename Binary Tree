@@ -5,7 +5,7 @@ using namespace std;
 
 // Class TreeNode
 template <typename T>
-class TreeNode 
+class TreeNode  
 {
 public:
     T val;
