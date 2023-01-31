@@ -2,7 +2,6 @@
 
 using namespace std;
 // BINARY TREE
-
 // Class TreeNode
 template <typename T>
 class TreeNode  
