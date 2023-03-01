@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-// BINARY TREE
-// Class TreeNode 
+// BINARY TREE  
+
 template <typename T>
 class TreeNode  
 {
