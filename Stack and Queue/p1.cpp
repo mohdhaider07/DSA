@@ -202,13 +202,121 @@ cout<<"\n#######################################################################
 }
 
 
+// ***********************************************************************
+// get index of next smallest to the right
+ vector<int> getIndexOfSmallerRight(vector<int> arr){
+    if(arr.size()==1){
+        return {0};
+    }
+    int n=arr.size();
+    vector<int>ans;
+    stack<int>s;
+    for(int i=n-1;i>=0;i--){
+        if(s.empty()){
+            ans.insert(ans.begin(),n);
+            s.push(i);
+        }
+        else if (
+            !s.empty() && arr[s.top()]>=arr[i]
+        ){
+           while (!s.empty() && arr[s.top()]>=arr[i])
+           {
+           s.pop();
+           }
+           if(s.empty()){
+            ans.insert(ans.begin(),n);
+            s.push(i);
+           }else{
+            ans.insert(ans.begin(),s.top());
+            s.push(i);
+           }
+        }else{
+            ans.insert(ans.begin(),s.top());
+            s.push(i);
+        }
+    }
+    return ans;
+ }
+
+//   get the index of next smallest in the left side
+vector<int> getIndexOfSmallestInLeft(vector<int>arr){
+    int n=arr.size();
+    if(n==1){
+        return {0};
+    }
+    vector<int>ans;
+    stack<int>s;
+
+     for(int i=0;i<n;i++){
+        if(s.empty()){
+            ans.push_back(-1);
+            s.push(i);
+        }
+        else if (
+            !s.empty() && arr[s.top()] >= arr[i]
+        ){
+           while (!s.empty() && arr[s.top()] >= arr[i])
+           {
+           s.pop();
+           }
+           if(s.empty()){
+            ans.push_back(-1);
+            s.push(i);
+           }else{
+            ans.push_back(s.top());
+            s.push(i);
+           }
+        }else{
+            ans.push_back(s.top());
+            s.push(i);
+        }
+    }
+
+    return ans;
+}
+
+//  https://leetcode.com/problems/largest-rectangle-in-histogram/
+int largestRectangleArea(vector<int>& heights) {
+    if(heights.size()==1){
+        return heights[0];
+    }
+
+    int n=heights.size();
+    vector<int>left=getIndexOfSmallestInLeft(heights);
+    vector<int>right=getIndexOfSmallerRight(heights);
+
+    for(auto i:left){
+        cout<<i<<" ";
+    }
+    cout<<endl;
+    for(auto i:right){
+        cout<<i<<" ";
+    }
+    int maxArea=INT8_MIN;
+
+    for(int i=0;i<n;i++){
+        
+        int width = right[i]-left[i]-1;
+        int area = width * heights[i];
+        maxArea=max(maxArea,area);
+
+    }
+
+return maxArea;
+}
+
+int maximalRectangle(vector<vector<char>>& matrix) {
+        
+        
+
+        return 0;
+}
+
 
 int main(){
 
-       int arr[] = {68, 735, 101, 770, 525, 279, 559, 563, 465, 106, 146, 82, 28, 362, 492, 596, 743, 28, 637, 392, 205, 703, 154, 293, 383, 622, 317, 519, 696, 648, 127, 372, 339, 270, 713, 68, 700, 236, 295, 704, 612, 123};
-
-        calculateSpan(arr,42);
-      
+       vector<int>v{2,1,5,6,2,3};
+        cout<<"\nMax Area is: "<<largestRectangleArea(v);
 
     cout<<"\nMohd Haider"<<endl;
     return 0;
