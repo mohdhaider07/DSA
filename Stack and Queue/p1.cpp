@@ -142,18 +142,19 @@ vector<int> getNextSmallestLeft(vector<int>arr){
     return ans;
 }
 
-vector<int>getNextLargestElementIndex(vector<int>arr){
-    int n=arr.size();
+vector<int>getNextLargestElementIndex(int arr[],int n){
+
     if(n==1){
-        return {-1};}
+    return {-1};
+    }
     vector<int>ans;
     stack<int>s;
 
-    for(int i=0;i<n;i++){
-        if(s.empty()){
-            ans.push_back(-1);
-            s.push(i);
-        }else if(!s.empty() && arr[i]>arr[s.top()]){
+    ans.push_back(-2);
+    s.push(0);
+
+    for(int i=1;i<n;i++){
+        if(!s.empty() && arr[i]>arr[s.top()]){
             while(!s.empty() && arr[i]>arr[s.top()]){
                 s.pop();
             }
@@ -172,17 +173,42 @@ vector<int>getNextLargestElementIndex(vector<int>arr){
 return ans;
 }
 
+void calculateSpan(int price[], int n)
+{
+    // Your code here
+    if(n==1){
+    return ;
+    }
+    vector<int>ans;
+    vector<int>indexNextGreaterLeft=getNextLargestElementIndex(price,n);
+
+     for(auto i: indexNextGreaterLeft){
+        cout<<i<<" ";
+    }
+
+    for(int i=0;i<n;i++){
+        if(indexNextGreaterLeft[i]==-2){
+            ans.push_back(1);
+        }else{
+            int stockSpan=i-indexNextGreaterLeft[i];
+            ans.push_back(stockSpan);
+        }
+    }
+cout<<"\n########################################################################"<<endl;
+    for(auto i: ans){
+        cout<<i<<" ";
+    }
+
+}
+
 
 
 int main(){
 
-        vector<int>v{1, 6, 4, 10, 2, 5};
-        v=getNextLargestElementIndex(v);
+       int arr[] = {68, 735, 101, 770, 525, 279, 559, 563, 465, 106, 146, 82, 28, 362, 492, 596, 743, 28, 637, 392, 205, 703, 154, 293, 383, 622, 317, 519, 696, 648, 127, 372, 339, 270, 713, 68, 700, 236, 295, 704, 612, 123};
 
-        for(auto i:v){
-            cout<<i<<" ";
-        }
-
+        calculateSpan(arr,42);
+      
 
     cout<<"\nMohd Haider"<<endl;
     return 0;
