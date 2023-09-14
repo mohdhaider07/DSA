@@ -285,13 +285,13 @@ int largestRectangleArea(vector<int>& heights) {
     vector<int>left=getIndexOfSmallestInLeft(heights);
     vector<int>right=getIndexOfSmallerRight(heights);
 
-    for(auto i:left){
-        cout<<i<<" ";
-    }
-    cout<<endl;
-    for(auto i:right){
-        cout<<i<<" ";
-    }
+    // for(auto i:left){
+    //     cout<<i<<" ";
+    // }
+    // cout<<endl;
+    // for(auto i:right){
+    //     cout<<i<<" ";
+    // }
     int maxArea=INT8_MIN;
 
     for(int i=0;i<n;i++){
@@ -305,18 +305,36 @@ int largestRectangleArea(vector<int>& heights) {
 return maxArea;
 }
 
+
+
 int maximalRectangle(vector<vector<char>>& matrix) {
         
-        
+        vector<int> v;
+         for(auto i:matrix[0]){
+                v.push_back(i-'0');
+         }
+         int maxArea=largestRectangleArea(v);
 
-        return 0;
+         for(int i=1;i<matrix.size();i++){
+            for(int l=0; l< matrix[i].size();l++){
+                if(matrix[i][l]=='1'){
+                    v[l]=v[l]+1;
+                }else{
+                    v[l]=0;
+                }
+            }
+            int area=largestRectangleArea(v);
+            maxArea=max(area,maxArea);
+         }
+
+        return maxArea;
 }
 
 
 int main(){
+        vector<int>v{3,1,3,2,2};
+    
 
-       vector<int>v{2,1,5,6,2,3};
-        cout<<"\nMax Area is: "<<largestRectangleArea(v);
 
     cout<<"\nMohd Haider"<<endl;
     return 0;
