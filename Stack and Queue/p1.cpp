@@ -154,8 +154,8 @@ vector<int>getNextLargestElementIndex(int arr[],int n){
     s.push(0);
 
     for(int i=1;i<n;i++){
-        if(!s.empty() && arr[i]>arr[s.top()]){
-            while(!s.empty() && arr[i]>arr[s.top()]){
+        if(!s.empty() && arr[i]>= arr[s.top()]){
+            while(!s.empty() && arr[i]>= arr[s.top()]){
                 s.pop();
             }
             if(s.empty()){
