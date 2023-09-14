@@ -142,9 +142,42 @@ vector<int> getNextSmallestLeft(vector<int>arr){
     return ans;
 }
 
+vector<int>getNextLargestElementIndex(vector<int>arr){
+    int n=arr.size();
+    if(n==1){
+        return {-1};}
+    vector<int>ans;
+    stack<int>s;
+
+    for(int i=0;i<n;i++){
+        if(s.empty()){
+            ans.push_back(-1);
+            s.push(i);
+        }else if(!s.empty() && arr[i]>arr[s.top()]){
+            while(!s.empty() && arr[i]>arr[s.top()]){
+                s.pop();
+            }
+            if(s.empty()){
+                ans.push_back(-1);
+                s.push(i);
+            }else{
+                ans.push_back(s.top());
+                s.push(i);
+            }
+        }else {
+            ans.push_back(s.top());
+            s.push(i);
+        }
+    }
+return ans;
+}
+
+
+
 int main(){
+
         vector<int>v{1, 6, 4, 10, 2, 5};
-        v=getNextSmallestLeft(v);
+        v=getNextLargestElementIndex(v);
 
         for(auto i:v){
             cout<<i<<" ";
