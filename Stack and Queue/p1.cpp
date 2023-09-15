@@ -306,6 +306,49 @@ return maxArea;
 }
 
 
+//  largest area form by the squre 
+int largestSquareArea(vector<int>& heights) {
+    if(heights.size()==1){
+        return heights[0];
+    }
+
+    int n=heights.size();
+    vector<int>left=getIndexOfSmallestInLeft(heights);
+    vector<int>right=getIndexOfSmallerRight(heights);
+
+    // for(auto i:left){
+    //     cout<<i<<" ";
+    // }
+    // cout<<endl;
+    // for(auto i:right){
+    //     cout<<i<<" ";
+    // }
+    int maxArea=INT8_MIN;
+
+    for(int i=0;i<n;i++){
+        
+        int width = right[i]-left[i]-1;
+        int area= 0;
+        if(width>=heights[i]){
+            area=heights[i]*heights[i];
+        }
+        maxArea=max(maxArea,area);
+
+    }
+
+        
+    cout<<"vector<in "<<endl;
+    for(auto i:heights){
+        cout<<i<<" ";
+    }
+    cout<<endl<<"max area "<<maxArea<<endl;;
+
+
+return maxArea;
+}
+
+
+
 
 int maximalRectangle(vector<vector<char>>& matrix) {
         
@@ -313,7 +356,7 @@ int maximalRectangle(vector<vector<char>>& matrix) {
          for(auto i:matrix[0]){
                 v.push_back(i-'0');
          }
-         int maxArea=largestRectangleArea(v);
+         int maxArea=largestSquareArea(v);
 
          for(int i=1;i<matrix.size();i++){
             for(int l=0; l< matrix[i].size();l++){
@@ -323,17 +366,28 @@ int maximalRectangle(vector<vector<char>>& matrix) {
                     v[l]=0;
                 }
             }
-            int area=largestRectangleArea(v);
+            int area=largestSquareArea(v);
             maxArea=max(area,maxArea);
          }
-
+        
         return maxArea;
 }
 
 
 int main(){
-        vector<int>v{3,1,3,2,2};
-    
+          vector<vector<char>> v{
+        {'1'},
+        {'0'},
+        {'1'},
+        {'1'},
+        {'1'},
+        {'1'},
+        {'0'}
+    };
+
+     
+        cout<<"Largest area is : "<<   maximalRectangle(v);
+      
 
 
     cout<<"\nMohd Haider"<<endl;
