@@ -307,9 +307,13 @@ return maxArea;
 
 
 //  largest area form by the squre 
+// https://leetcode.com/problems/maximal-square/
 int largestSquareArea(vector<int>& heights) {
     if(heights.size()==1){
-        return heights[0];
+        if(heights[0]>0){
+            return 1;
+        }
+        return 0;
     }
 
     int n=heights.size();
@@ -335,18 +339,8 @@ int largestSquareArea(vector<int>& heights) {
         maxArea=max(maxArea,area);
 
     }
-
-        
-    cout<<"vector<in "<<endl;
-    for(auto i:heights){
-        cout<<i<<" ";
-    }
-    cout<<endl<<"max area "<<maxArea<<endl;;
-
-
 return maxArea;
 }
-
 
 
 
@@ -375,7 +369,7 @@ int maximalRectangle(vector<vector<char>>& matrix) {
 
 
 int main(){
-          vector<vector<char>> v{
+    vector<vector<char>> v{
         {'1'},
         {'0'},
         {'1'},
@@ -386,7 +380,7 @@ int main(){
     };
 
      
-        cout<<"Largest area is : "<<   maximalRectangle(v);
+    cout<<"Largest area is : "<<   maximalRectangle(v);
       
 
 
