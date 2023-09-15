@@ -368,19 +368,88 @@ int maximalRectangle(vector<vector<char>>& matrix) {
 }
 
 
+// next greater to right index to rain tap
+
+vector<int> nextGreaterToRightIndex(vector<int>arr){
+        if(arr.size()==1){
+            return {-1};
+        }
+        int n=arr.size();
+        vector<int>ans;
+        stack<int>s;
+
+        for(int i=n-1;i>=0;i--){
+            if(s.empty()){
+                ans.insert(ans.begin(),-1);
+                s.push(i);
+            }else if (  !s.empty() && arr[i]>arr[s.top()]  ){
+                while ( !s.empty() && arr[i]>arr[s.top()])
+                {
+                    s.pop();
+                }
+                if(s.empty()){
+                     ans.insert(ans.begin(),-1);
+                     s.push(i);
+                }else{
+                    ans.insert(ans.begin(),s.top());
+                    s.push(i);
+
+                }
+                
+            }else{
+                 ans.insert(ans.begin(),s.top());
+                    s.push(i);
+            }
+
+        }
+        return ans;
+
+}
+
+// taping rain water
+ int trap(vector<int>& height) {
+
+        int n=height.size();
+        if(n==1){
+            return 0;
+        }  
+
+        vector<int>nextGreaterToRight=nextGreaterToRightIndex(height);
+
+        for (auto i:nextGreaterToRight)
+        {
+            cout<<i<<" ";
+        }
+        cout<<endl;
+        
+
+        int sum=0;
+
+        for(int i=0;i<n;i++){
+            if(nextGreaterToRight[i]==-1) continue;
+
+            int width=nextGreaterToRight[i]-i-1;
+            int area=width*height[i];
+
+            for(int l=i+1;l<nextGreaterToRight[i];l++){
+                area-=height[l];
+            }
+
+
+            sum+=area;
+
+            i=nextGreaterToRight[i]-1;
+        }
+return sum;
+
+    }
+
+
 int main(){
-    vector<vector<char>> v{
-        {'1'},
-        {'0'},
-        {'1'},
-        {'1'},
-        {'1'},
-        {'1'},
-        {'0'}
-    };
+    vector<int> v{4,2,0,3,2,5};
 
      
-    cout<<"Largest area is : "<<   maximalRectangle(v);
+    cout<<"Largest area is : "<<   trap(v);
       
 
 
