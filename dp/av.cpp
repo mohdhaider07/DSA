@@ -33,81 +33,298 @@ bool canPartitionHelper(vector<int> &nums, int i, int left, int right)
     return canPartitionHelper(nums, i - 1, left + nums[i], right) || canPartitionHelper(nums, i - 1, left, right + nums[i]);
 }
 
+/*
 bool canPartition(vector<int> &nums)
 {
     int i = nums.size() - 1;
     return canPartitionHelper(nums, i, 0, 0);
 }
+*/
 
-bool isSubsetSumHelper(vector<int>arr,int sum, int i){
-     if(sum==0) return true;
+// top down can partition
 
-    int n=arr.size();
-
-    if(i<0){
+/*
+bool canPartition(vector<int> &nums)
+{
+    int n = nums.size();
+    if (n == 0)
+    {
+        return true;
+    }
+    if (n == 1)
+    {
         return false;
     }
 
-    if(arr[i]>sum){
-        return isSubsetSumHelper(arr,sum,i-1);
-    }else{
-        return isSubsetSumHelper(arr,sum-arr[i],i-1) || isSubsetSumHelper(arr,sum,i-1);
+    int sum = 0;
+    for (auto n : nums)
+    {
+        sum += n;
+    }
+
+    if (sum % 2 != 0)
+    {
+        return false;
+    }
+
+    int d = sum / 2;
+
+    vector<vector<bool>> matrix(n + 1, vector<bool>(d + 1, false));
+
+    for (int i = 0; i <= n; i++)
+    {
+        for (int j = 0; j <= d; j++)
+        {
+            if (i == 0)
+            {
+                matrix[i][j] = false;
+            }
+            if (j == 0)
+            {
+                matrix[i][j] = true;
+            }
+        }
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= d; j++)
+        {
+            if (nums[i - 1] > j)
+            {
+                matrix[i][j] = matrix[i - 1][j];
+            }
+            else
+            {
+                matrix[i][j] = matrix[i - 1][j - nums[i - 1]] ||
+                               matrix[i - 1][j];
+            }
+        }
+    }
+    return matrix[n][d];
+}
+*/
+/*
+void isSubsetSumHelper(vector<int> arr, int sum, int i, vector<int> v)
+{
+    if (sum == 0)
+    {
+        cout << "{";
+        for (auto i : v)
+        {
+            cout << i << ",";
+        }
+        cout << "}" << endl;
+
+        return;
+    }
+
+    int n = arr.size();
+
+    if (i < 0)
+    {
+        return;
+    }
+
+    if (arr[i] > sum)
+    {
+        isSubsetSumHelper(arr, sum, i - 1, v);
+    }
+    else
+    {
+        isSubsetSumHelper(arr, sum, i - 1, v);
+        v.push_back(arr[i]);
+        isSubsetSumHelper(arr, sum - arr[i], i - 1, v);
     }
 }
-
-// bool isSubsetSum(vector<int>arr, int sum){
-//     // code here 
-//     if(sum==0) return true;
-//     int n=arr.size();
-//     if(n==0){
-//         return false;
-//     }
-//     int i=arr.size()-1; 
-//     return isSubsetSumHelper(arr,sum,i);
-// }
-
-//  top down 
-
-bool isSubsetSum(vector<int>v, int sum){
-    if(sum==0) return true;
-    int n=v.size();
-    if(n==0){
+*/
+/*
+void isSubsetSum(vector<int> arr, int sum)
+{
+    // code here
+    if (sum == 0)
+        return;
+    int n = arr.size();
+    if (n == 0)
+    {
+        return;
+    }
+    int i = arr.size() - 1;
+    isSubsetSumHelper(arr, sum, i, {});
+}
+*/
+//  top down dp
+/*
+bool isSubsetSum(vector<int> v, int sum)
+{
+    if (sum == 0)
+        return true;
+    int n = v.size();
+    if (n == 0)
+    {
         return false;
     }
 
+    vector<vector<bool>> arr(n + 1, vector<bool>(sum + 1, false));
 
-    // bool arr[n+1][sum+1]=false;
-     vector<vector<bool>> arr(n + 1, vector<bool>(sum + 1, false));
-
-    for(int k=0;k<=sum;k++){
-        arr[0][k] = false ;
-    }
-
-    for(int k=0;k<=n;k++){
-        arr[k][0] = true ;
+    for (int i = 0; i <= n; i++)
+    {
+        for (int j = 0; j <= sum; j++)
+        {
+            if (i == 0)
+            {
+                arr[i][j] = false;
+            }
+            if (j == 0)
+            {
+                arr[i][j] = true;
+            }
+        }
     }
 
     // for loop
-    for(int i=0;i<=n;i++){
-            for(int j=0;j<=sum;j++){
-                if(v[i]>j){
-                    arr[i][j] = arr[i-1][j];
-                }else{
-                    arr[i][j] = arr[i-1][j-v[i]] || arr[i-1][j];
-                }
+    for (int i = 1; i <= n; ++i)
+    {
+        for (int j = 1; j <= sum; ++j)
+        {
+            if (v[i - 1] > j)
+            {
+                arr[i][j] = arr[i - 1][j];
             }
+            else
+            {
+                arr[i][j] = arr[i - 1][j - v[i - 1]] || arr[i - 1][j];
+            }
+        }
     }
 
-return arr[n][sum];
+    return arr[n][sum];
+}
+*/
 
+//
+
+int countNumOfSubsetk(vector<int> arr, int sum)
+{
+    if (sum == 0)
+        return 1;
+
+    int n = arr.size();
+
+    if (n == 0)
+    {
+        return 0;
+    }
+
+    vector<vector<int>> matrix(n + 1, vector<int>(sum + 1, 0));
+    for (int i = 0; i <= n; i++)
+    {
+        matrix[i][0] = 1; // Initialize the first column to 1
+    }
+    // print matrix
+    for (int i = 0; i <= n; i++)
+    {
+        cout << endl;
+        for (int j = 0; j <= sum; j++)
+        {
+            cout << matrix[i][j] << " ";
+        }
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= sum; j++)
+        {
+            if (arr[i - 1] > j)
+            {
+                matrix[i][j] = matrix[i - 1][j];
+            }
+            else
+            {
+                matrix[i][j] = matrix[i - 1][j - arr[i - 1]] + matrix[i - 1][j];
+            }
+        }
+    }
+
+    return matrix[n][sum];
 }
 
+// https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/description/
 
+int minimumDifferenceHelper(vector<int> &nums)
+{
+    int n = nums.size();
+    int sum = 0;
+    for (auto n : nums)
+    {
+        sum += std::abs(n);
+    }
+
+    int d = std::abs(sum / 2);
+
+    vector<vector<bool>> matrix(n + 1, vector<bool>(d + 1, false));
+
+    for (int i = 0; i <= n; i++)
+    {
+        for (int j = 0; j <= d; j++)
+        {
+            if (i == 0)
+            {
+                matrix[i][j] = false;
+            }
+            if (j == 0)
+            {
+                matrix[i][j] = true;
+            }
+        }
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= d; j++)
+        {
+            if (nums[i - 1] > j)
+            {
+                matrix[i][j] = matrix[i - 1][j];
+            }
+            else
+            {
+                matrix[i][j] = matrix[i - 1][j - nums[i - 1]] ||
+                               matrix[i - 1][j];
+            }
+        }
+    }
+    // print matrix
+    for (int i = 0; i <= n; i++)
+    {
+        cout << endl;
+        for (int j = 0; j <= d; j++)
+        {
+            cout << matrix[i][j] << " ";
+        }
+    }
+    cout << "\n##############################################";
+
+    for (int i = d; i >= 0; --i)
+    {
+        if (matrix[n][i])
+        {
+            return sum - 2 * i;
+        }
+    }
+
+    return 0;
+}
+
+int minimumDifference(vector<int> &nums)
+{
+    return minimumDifferenceHelper(nums);
+}
 
 int main()
 {
-    vector<int>v{3, 34, 4, 12, 5, 2};
-    cout << "output is : "<<isSubsetSum(v,30);
-    cout << "\n Code executed";
+    vector<int> v{6, 36};
+    cout << "output is : " << minimumDifferenceHelper(v);
+    cout << "\n end of program";
     return 0;
 }
