@@ -221,15 +221,9 @@ int countNumOfSubsetk(vector<int> arr, int sum)
     {
         matrix[i][0] = 1; // Initialize the first column to 1
     }
-    // print matrix
-    for (int i = 0; i <= n; i++)
-    {
-        cout << endl;
-        for (int j = 0; j <= sum; j++)
-        {
-            cout << matrix[i][j] << " ";
-        }
-    }
+
+
+        int mod=1e9+7;
 
     for (int i = 1; i <= n; i++)
     {
@@ -241,7 +235,7 @@ int countNumOfSubsetk(vector<int> arr, int sum)
             }
             else
             {
-                matrix[i][j] = matrix[i - 1][j - arr[i - 1]] + matrix[i - 1][j];
+                matrix[i][j] = (matrix[i - 1][j - arr[i - 1]] + matrix[i - 1][j])%mod;
             }
         }
     }
@@ -251,7 +245,7 @@ int countNumOfSubsetk(vector<int> arr, int sum)
 
 // https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/description/
 
-int minimumDifferenceHelper(vector<int> &nums)
+int minimumDifference(vector<int> &nums)
 {
     int n = nums.size();
     int sum = 0;
@@ -264,19 +258,8 @@ int minimumDifferenceHelper(vector<int> &nums)
 
     vector<vector<bool>> matrix(n + 1, vector<bool>(d + 1, false));
 
-    for (int i = 0; i <= n; i++)
-    {
-        for (int j = 0; j <= d; j++)
-        {
-            if (i == 0)
-            {
-                matrix[i][j] = false;
-            }
-            if (j == 0)
-            {
-                matrix[i][j] = true;
-            }
-        }
+    for(int i=0;i<=n;i++){
+        matrix[i][0]=true;
     }
 
     for (int i = 1; i <= n; i++)
@@ -284,8 +267,7 @@ int minimumDifferenceHelper(vector<int> &nums)
         for (int j = 1; j <= d; j++)
         {
             if (nums[i - 1] > j)
-            {
-                matrix[i][j] = matrix[i - 1][j];
+            {                matrix[i][j] = matrix[i - 1][j];
             }
             else
             {
@@ -294,37 +276,27 @@ int minimumDifferenceHelper(vector<int> &nums)
             }
         }
     }
-    // print matrix
-    for (int i = 0; i <= n; i++)
-    {
-        cout << endl;
-        for (int j = 0; j <= d; j++)
-        {
-            cout << matrix[i][j] << " ";
-        }
-    }
+ 
     cout << "\n##############################################";
+
+    int ans = INT8_MAX;
 
     for (int i = d; i >= 0; --i)
     {
         if (matrix[n][i])
         {
-            return sum - 2 * i;
+            ans=min(ans ,sum - 2 * i);
         }
     }
 
-    return 0;
+    return ans;
 }
 
-int minimumDifference(vector<int> &nums)
-{
-    return minimumDifferenceHelper(nums);
-}
 
 int main()
 {
-    vector<int> v{6, 36};
-    cout << "output is : " << minimumDifferenceHelper(v);
+    vector<int> v{3,9,7,3};
+    cout << "output is : " << minimumDifference(v);
     cout << "\n end of program";
     return 0;
 }
