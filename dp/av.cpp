@@ -292,6 +292,26 @@ int minimumDifference(vector<int> &nums)
     return ans;
 }
 
+// 11 Count the number of subset with a given difference
+
+int countThesubsetwithDiff(vector<int>nums,int diff){
+    int n=nums.size();
+    if(n==0){
+        return 0;
+    }
+    if(n==1){
+        if(diff==nums[0]){
+            return 1;
+        }
+        return 0;
+
+    }
+
+    
+
+
+
+}
 
 int main()
 {
