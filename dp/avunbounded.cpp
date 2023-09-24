@@ -9,7 +9,7 @@ Price[] = {1, 5, 8, 9, 10, 17, 17, 20}
 Output:
 22*/
 // recursive code
-
+/*
 int cutRodHelper(vector<int>& price,vector<int> &len,int n,int i){
         if(n==0)return 0;
         if(i==len.size()){
@@ -38,7 +38,7 @@ int cutRod(vector<int>price,int n){
 return cutRodHelper(price,len,n,0);
 
 }
-
+*/
 /*
  int cutRod(vector<int>price, int n) {
         //code here
@@ -69,9 +69,32 @@ return cutRodHelper(price,len,n,0);
 
 }
 */
+
+// Minimum Cost to Cut a Stick
+int minCost(int n, vector<int>& cuts) {
+        
+        int c=cuts.size();
+        vector<vector<int>>dp(c+1,vector<int>(n+1,0));
+
+        for(int i=1;i<=c;i++){
+            for(int j=0;j<=n;j++){
+                
+                if(cuts[i-1]>j){
+                    dp[i][j]=dp[i-1][j];
+                }else{
+                    dp[i][j]=min(j+dp[i][j-cuts[i-1]],
+                    dp[i-1][j]
+                    );
+                }
+            }
+        }
+        return dp[c][n];
+
+    }
+
 int main(){
-    vector<int>v{1, 5, 8, 9, 10, 17, 17, 20};
-    cout<<"ans is "<<cutRod(v,8);
+    vector<int>v{1,3,4,5};
+    cout<<"ans is "<<minCost(7,v);
     cout<<"\nprogram ended";
     return 0;
 }
