@@ -1,0 +1,401 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+// BINARY TREE
+
+// Class TreeNode
+template <typename T>
+class TreeNode
+{
+public:
+    T val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(T x) : val(x), left(NULL), right(NULL) {}
+};
+
+void printTree(TreeNode<int> *root) // void function to print the tree recursively
+{
+    if (root == NULL)
+        return;
+    cout << root->val << ":";
+    if (root->left != NULL)
+        cout << "L" << root->left->val << " ";
+    if (root->right != NULL)
+        cout << "R" << root->right->val << " ";
+    cout << endl;
+    printTree(root->left);
+    printTree(root->right);
+}
+
+TreeNode<int> *takeInput() // take input recursively
+{
+    int rootData;
+    cout << "Enter Data : ";
+    cin >> rootData;
+    if (rootData == -1)
+    {
+        return NULL;
+    }
+    TreeNode<int> *root = new TreeNode<int>(rootData);
+    cout << rootData << "\nLeft =>";
+    root->left = takeInput();
+    cout << rootData << "\nRight=>";
+    root->right = takeInput();
+    return root;
+}
+// take input level wise
+
+TreeNode<int> *takeInputLevelWise()
+{
+    int rootData;
+    cout << "Enter RootData: ";
+    cin >> rootData;
+    TreeNode<int> *root = new TreeNode<int>(rootData);
+    queue<TreeNode<int> *> pendingNodes;
+    pendingNodes.push(root);
+    while (!pendingNodes.empty())
+    {
+        TreeNode<int> *front = pendingNodes.front();
+        pendingNodes.pop();
+        int leftChild, rightChild;
+        cout << "Enter Left Child of " << front->val << ": ";
+        cin >> leftChild;
+        if (leftChild != -1)
+        {
+            TreeNode<int> *child = new TreeNode<int>(leftChild);
+            front->left = child;
+            pendingNodes.push(child);
+        }
+        cout << "Enter Right Child of " << front->val << ": ";
+        cin >> rightChild;
+        if (rightChild != -1)
+        {
+            TreeNode<int> *child = new TreeNode<int>(rightChild);
+            front->right = child;
+            pendingNodes.push(child);
+        }
+    }
+    return root;
+}
+
+// level order traversal
+void printLevelWise(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    queue<TreeNode<int> *> pendingNodes;
+    pendingNodes.push(root);
+    pendingNodes.push(NULL);
+    while (!pendingNodes.empty())
+    {
+        if (pendingNodes.front() == NULL)
+        {
+            cout << endl;
+            pendingNodes.pop();
+            if (!pendingNodes.empty())
+                pendingNodes.push(NULL);
+        }
+        TreeNode<int> *front = pendingNodes.front();
+        pendingNodes.pop();
+        cout << front->val << " ";
+        if (front->left)
+        {
+            pendingNodes.push(front->left);
+        }
+        if (front->right)
+        {
+            pendingNodes.push(front->right);
+        }
+    }
+}
+
+// count no of nodes
+int countNodes(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+
+        return 0;
+    }
+    int ans = 1;
+    ans += countNodes(root->left);
+    ans += countNodes(root->right);
+    return ans;
+}
+// inorder traversal
+void postOrderTraversal(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    postOrderTraversal(root->left);
+    postOrderTraversal(root->right);
+    cout << root->val << " ";
+}
+void preOrderTraversal(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    cout << root->val << " ";
+    preOrderTraversal(root->left);
+    preOrderTraversal(root->right);
+}
+void inOrderTraversal(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    inOrderTraversal(root->left);
+    cout << root->val << " ";
+    inOrderTraversal(root->right);
+}
+// Maximum height
+int height(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    int ans = 0;
+    ans += max(height(root->left), height(root->right)) + 1;
+    return ans;
+}
+// symantric of binanry tree
+bool helper(TreeNode<int> *root1, TreeNode<int> *root2)
+{
+    if (root1 == NULL && root2 == NULL)
+        return true;
+    if (root1 == NULL || root2 == NULL)
+        return false;
+    if (root1->val != root2->val)
+        return false;
+
+    return helper(root1->left, root2->right) && helper(root1->right, root2->left);
+}
+
+bool isSymmetric(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return true;
+    }
+    return helper(root->left, root->right);
+}
+
+// Find Node
+bool findNode(TreeNode<int> *root, int key)
+{
+    if (root == NULL)
+        return false;
+    if (root->val == key)
+        return true;
+
+    return findNode(root->left, key) || findNode(root->right, key);
+}
+
+// find minimum
+int findMin(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return INT_MAX;
+    }
+    int ans = root->val;
+    ans = min(ans, min(findMin(root->left), findMin(root->right)));
+    return ans;
+}
+
+// finding minimum other way in binary tree
+
+void findMin2(TreeNode<int> *root, int &ans)
+{
+    if (root == NULL)
+        return;
+    ans = min(ans, root->val);
+    findMin2(root->left, ans);
+    findMin2(root->right, ans);
+}
+// finding max value in tree
+int findMax(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return INT_MIN;
+    }
+    int ans = root->val;
+    ans = max(ans, max(findMax(root->left), findMax(root->right)));
+    return ans;
+}
+
+// finding max value other way
+void findMax2(TreeNode<int> *root, int &ans)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    ans = max(ans, root->val);
+    findMax2(root->left, ans);
+    findMax2(root->right, ans);
+}
+//  count Node
+int countNode(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    int ans = 1;
+    ans += countNode(root->left) + countNode(root->right);
+    return ans;
+}
+// count leaf node binary tree
+void countLeafNode2(TreeNode<int> *root, int &ans)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    if (root->left == NULL && root->right == NULL)
+    {
+        ans++;
+    }
+    countLeafNode2(root->left, ans);
+    countLeafNode2(root->right, ans);
+}
+
+// diameter of binary Tree with pair
+
+pair<int, int> heightDiameter(TreeNode<int> *root)
+{
+    if (root == NULL)
+    {
+        pair<int, int> p;
+        p.first = 0;
+        p.second = 0;
+        return p;
+    }
+    pair<int, int> leftAns = heightDiameter(root->left);
+    pair<int, int> rightAns = heightDiameter(root->right);
+    int option1 = leftAns.first + rightAns.first;
+    int option2 = leftAns.second;
+    int option3 = rightAns.second;
+    int height = max(leftAns.first, rightAns.first) + 1;
+    int diameter = max(option1, max(option2, option3));
+    pair<int, int> p;
+    p.first = height;
+    p.second = diameter;
+    return p;
+}
+
+int diameter(TreeNode<int> *root)
+{
+    pair<int, int> p = heightDiameter(root);
+    return p.second;
+}
+
+// root to node path
+bool getPath(TreeNode<int> *root, int val, vector<int> &ans)
+{
+    if (root == NULL)
+    {
+        return false;
+    }
+    ans.push_back(root->val);
+    if (root->val == val)
+    {
+        return true;
+    }
+    bool left = getPath(root->left, val, ans);
+    bool right = getPath(root->right, val, ans);
+    if (left || right)
+    {
+        return true;
+    }
+    ans.pop_back();
+    return false;
+}
+
+// vector<int> findSpiral(TreeNode<int> *root)
+// {
+//     // Your code here
+//     vector<int> ans;
+//     if (root == NULL)
+//     {
+//         return ans;
+//     }
+//     bool leftToRight = false;
+//     stack<TreeNode<int> *> currentLevel;
+//     stack<TreeNode<int> *> nextLevel;
+//     currentLevel.push(root);
+//     while (!currentLevel.empty())
+//     {
+//         TreeNode<int> *f = currentLevel.top();
+//         currentLevel.pop();
+//         if (f)
+//         {
+//             ans.push_back(f->val);
+//             if (leftToRight)
+//             {
+//                 cout << "left is true" << endl;
+//                 if (f->left)
+//                 {
+//                     nextLevel.push(f->left);
+//                 }
+//                 if (f->right)
+//                 {
+//                     nextLevel.push(f->right);
+//                 }
+//             }
+//             else
+//             {
+//                 if (f->right)
+//                 {
+//                     nextLevel.push(f->right);
+//                 }
+//                 if (f->left)
+//                 {
+//                     nextLevel.push(f->left);
+//                 }
+//             }
+//             if (currentLevel.empty())
+//             {
+//                 leftToRight = !leftToRight;
+//                 swap(currentLevel, nextLevel);
+//             }
+//         }
+//     }
+//     return ans;
+// }
+
+int main()
+{
+    TreeNode<int> *root1 = takeInputLevelWise();
+    TreeNode<int> *root2 = takeInputLevelWise();
+
+    postOrderTraversal(root1);
+    cout << endl;
+    preOrderTraversal(root1);
+    cout << endl;
+    inOrderTraversal(root1);
+    cout << endl;
+    postOrderTraversal(root2);
+    cout << endl;
+    preOrderTraversal(root2);
+    cout << endl;
+    inOrderTraversal(root2);
+    return 0;
+}
+// 1 -1 -1
+// 1 2 3 4 5 6 7 -1 -1 -1 -1 8 -8 -1 -1 -1 -1 -1 -1
+// 1 3 2 -1 -1 -1 -1
+
+// 1 3 2 -1 -1 5 4 -1 -1 -1 -1
+// 1 2 3 4 5 -1 -1 -1 -1 -1 -1
