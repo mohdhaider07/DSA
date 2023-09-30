@@ -8,3 +8,6 @@
 
 // scrable string
 // https://leetcode.com/problems/scramble-string/
+
+// egg droping problem
+// https://leetcode.com/problems/super-egg-drop
