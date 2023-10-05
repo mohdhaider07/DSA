@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<climits>
 
 using namespace std;
 
@@ -28,25 +29,32 @@ class Heap {
         }
 
         void downheap(int i){
-            if( i==0)return ;
+       
             int l=left(i);
             int r=right(i);
             int n=arr.size();
-
             
-            
+            int min = i;
 
+            if(l<n && arr[l]<arr[min] ){
+                min = l;
+            }
+            if(r<n && arr[r]<arr[min]){
+                    min=r;
+            }
 
+            if(min!=i){
+                swap(arr[i],arr[min]);
+                downheap(min);
+            }
         }
+
 public:
-        void insert(int x){
-            arr.push_back(x);
-            int i=arr.size()-1;
-            upheap(i);
-        }
+
 
         int getTop(){
             int n=arr.size();
+
             if(n<1) return -1;
 
             int top=arr[0];
@@ -56,28 +64,41 @@ public:
             arr[0]=last;
 
             if(n>1){
-
             arr.pop_back();
             downheap(0);
             }
-
-
             return top;
 
         }
 
-        
+        void insert(int x){
+            arr.push_back(x);
+            int i=arr.size()-1;
+            upheap(i);
+        }          
 
 };
 
+    // void buildHeap(vector<int> &v){
+    // int n=v.size();
+
+    // for(int i=n/2-1;i>=0;i--){
+    //     downheap(i);
+    // }
+    // }
+
 int main(){
     Heap h;
-    h.insert(5);
-    h.insert(2);
-    h.insert(10);
+    h.insert(22);
+    h.insert(54);
+    h.insert(45);
+    h.insert(58);
+    h.insert(96);
+    h.insert(85);
+    h.insert(23);
 
-    cout<<"Top "<<h.getTop()<<endl;
-    cout<<"Top "<<h.getTop()<<endl;
+
+ 
     cout<<"\nProgram exited : ";
     return 0;
 }
