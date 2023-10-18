@@ -11,3 +11,8 @@
 
 // egg droping problem
 // https://leetcode.com/problems/super-egg-drop
+
+// top 50 dp gfg
+
+// *************************************Easy***********************************************************
+// https://www.geeksforgeeks.org/minimum-sum-subsequence-least-one-every-four-consecutive-elements-picked/

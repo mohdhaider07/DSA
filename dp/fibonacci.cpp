@@ -48,13 +48,32 @@ int fib3(int n)
     return arr[n];
 }
 
+// all the permutation of the string
+
+string permutationAll(string str, int i, int m)
+{
+    int n = str.size();
+    if (m - 1 == i)
+    {
+        return str[i] + "";
+    }
+    if (i >= m)
+    {
+        return "";
+    }
+
+    string temp = str;
+    temp = temp.substr(0, i) + temp.substr(i + 1, n);
+    cout << temp << endl;
+    string s = str[i] + permutationAll(temp, i + 1, m);
+
+    cout << s;
+    return s;
+}
+
 int main()
 {
-    int n;
-    cout << "Enter the number of terms: ";
-    cin >> n;
-
-    cout << "Series is: " << fib3(n);
+    permutationAll("abs", 0, 3);
 
     return 0;
 }
