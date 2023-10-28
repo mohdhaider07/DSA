@@ -203,6 +203,73 @@ int nearestExit(vector<vector<char>> maze, vector<int> entrance)
     return ans == INT_MAX ? -1 : ans;
 }
 
+// =================================================
+// N-Queens
+// https://leetcode.com/problems/n-queens/description/
+// ====================================================
+
+void solveNQueensHelper(vector<pair<int, int>> &blocked, vector<vector<string>> &board, int i, int j, int q)
+{
+    int n = board.size();
+    int m = board[0].size();
+
+    // check the posion is occupied or not
+
+    if (q == 0 || board[i][j] == "Q")
+    {
+        return;
+    }
+
+    for (auto pos : blocked)
+    {
+        if (pos.first == i || pos.second == j || (abs(pos.first - i) == abs(pos.second - j)))
+        {
+
+            return;
+        }
+    }
+
+    blocked.push_back({i, j});
+    board[i][j] = "Q";
+    // down
+    if (i < n - 1)
+    {
+        solveNQueensHelper(blocked, board, i + 1, j, q - 1);
+    }
+    // up
+    if (i > 0)
+    {
+        solveNQueensHelper(blocked, board, i - 1, j, q - 1);
+    }
+
+    // right
+    if (j < m - 1)
+    {
+        solveNQueensHelper(blocked, board, i, j + 1, q - 1);
+    }
+    // left
+
+    if (j > 0)
+    {
+        solveNQueensHelper(blocked, board, i, j - 1, q - 1);
+    }
+
+    blocked.pop_back();
+    board[i][j] = ".";
+}
+
+vector<vector<string>> solveNQueens(int n)
+{
+    vector<pair<int, int>> blocked;
+
+    vector<vector<string>> board(n, vector<string>(n, "."));
+    // clall the heloper fucntion
+
+    solveNQueensHelper(blocked, board, 0, 0, n);
+
+    return board;
+}
+
 bool isEscapePossibleHelper(vector<vector<int>> &blocked, int i, int j, vector<int> &target, int &n, unordered_map<string, int> mp)
 {
 
