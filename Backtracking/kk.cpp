@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <climits>
+#include <unordered_map>
+#include <map>
 using namespace std;
 
 // https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/description/
@@ -39,7 +41,7 @@ void PrintMatrix(vector<vector<int>> &matrix, int n)
     cout << endl;
 }
 
-void printThePath(vector<vector<int>> matrix, int i, int j, int &n)
+void printThePath(vector<vector<int>> &matrix, int i, int j, int &n)
 {
 
     if (i >= n || j >= n)
@@ -48,7 +50,6 @@ void printThePath(vector<vector<int>> matrix, int i, int j, int &n)
     }
 
     matrix[i][j] = 1;
-    // cout<<"ee ";
     if (i == n - 1 && j == n - 1)
     {
 
@@ -65,6 +66,61 @@ void printThePath(vector<vector<int>> matrix, int i, int j, int &n)
     {
         printThePath(matrix, i + 1, j, n);
     }
+    matrix[i][j] = 0;
+}
+
+void printAllPath(vector<vector<int>> &matrix, int i, int j, int &n, int &stp)
+{
+    if (i >= n || j >= n || matrix[i][j] != 0)
+    {
+        return;
+    }
+
+    matrix[i][j] = stp++;
+
+    if (i == n - 1 && j == n - 1)
+    {
+        PrintMatrix(matrix, n);
+        matrix[i][j] = 0;
+        stp--;
+        return;
+    }
+
+    if (j < n - 1)
+    {
+        // right
+        printAllPath(matrix, i, j + 1, n, stp);
+    }
+
+    // left
+    if (j > 0)
+    {
+        printAllPath(matrix, i, j - 1, n, stp);
+    }
+
+    if (i < n - 1)
+    { // down
+        printAllPath(matrix, i + 1, j, n, stp);
+    }
+    // up
+    if (i > 0)
+    {
+        printAllPath(matrix, i - 1, j, n, stp);
+    }
+
+    if (j < n - 1 && i < n - 1)
+    { // digonal forward
+        printAllPath(matrix, i + 1, j + 1, n, stp);
+    }
+
+    // diagonal upwards
+    if (j > 0 && i > 0)
+    {
+        printAllPath(matrix, i - 1, j - 1, n, stp);
+    }
+
+    matrix[i][j] = 0;
+    stp--;
 }
 
 void printPathString(int i, int j, int n, string path)
@@ -147,22 +203,176 @@ int nearestExit(vector<vector<char>> maze, vector<int> entrance)
     return ans == INT_MAX ? -1 : ans;
 }
 
+bool isEscapePossibleHelper(vector<vector<int>> &blocked, int i, int j, vector<int> &target, int &n, unordered_map<string, int> mp)
+{
+
+    string key = to_string(i) + to_string(j);
+
+    if (mp[key] != 0)
+    {
+        return mp[key];
+    }
+
+    vector<int> currPos = {i, j};
+
+    if (currPos == target)
+    {
+        return true;
+    }
+
+    for (auto b : blocked)
+    {
+        if (b == currPos)
+        {
+            // return because it is blocked;
+            return false;
+        }
+    }
+
+    // mark currpos
+    blocked.push_back(currPos);
+
+    // down
+    bool down = false;
+    if (i < n - 1)
+    {
+        down |= mp[to_string(i + 1) + to_string(j)] = isEscapePossibleHelper(blocked, i + 1, j, target, n, mp);
+    }
+    // up
+    bool up = down;
+    if (i > 0)
+    {
+        up |= mp[to_string(i - 1) + to_string(j)] = isEscapePossibleHelper(blocked, i - 1, j, target, n, mp);
+    }
+
+    // right
+    bool right = up;
+    if (j < n - 1)
+    {
+        right |= mp[to_string(i) + to_string(j + 1)] = isEscapePossibleHelper(blocked, i, j + 1, target, n, mp);
+    }
+
+    // left
+    bool left = right;
+    if (j > 0)
+    {
+        left |= mp[to_string(i) + to_string(j - 1)] = isEscapePossibleHelper(blocked, i, j - 1, target, n, mp);
+    }
+
+    // backtrack
+    blocked.pop_back();
+
+    return mp[key] = left;
+}
+
+bool isEscapePossible(vector<vector<int>> &blocked, vector<int> &source, vector<int> &target)
+{
+    int n = 1e6;
+    unordered_map<string, int> mp;
+    return isEscapePossibleHelper(blocked, source[0], source[1], target, n, mp);
+}
+
+string keyStringify(int i, int j, int maxMove)
+{
+    return to_string(i) + to_string(j) + to_string(maxMove);
+}
+int findPathsHelper(int maxMove, int i, int j, int m, int n, unordered_map<string, int> &mp)
+{
+    if (i < 0 || i >= m || j < 0 || j >= n)
+    {
+        return 1;
+    }
+    if (maxMove == 0)
+    {
+        return 0;
+    }
+
+    string key = keyStringify(i, j, maxMove);
+
+    int MOD = 1e9 + 7;
+
+    if (mp[key] != 0)
+    {
+        return mp[key] % MOD;
+    }
+
+    int count = 0;
+    // down
+    if (mp[keyStringify(i + 1, j, maxMove - 1)] != 0)
+    {
+        count = ((count % MOD + mp[keyStringify(i + 1, j, maxMove - 1)] % MOD) % MOD);
+    }
+    else
+    {
+        count = (count % MOD + (mp[keyStringify(i + 1, j, maxMove - 1)] = findPathsHelper(maxMove - 1, i + 1, j, m, n, mp) % MOD)) % MOD;
+    }
+    // up
+    if (mp[keyStringify(i - 1, j, maxMove - 1)] != 0)
+    {
+        count = (count % MOD + mp[keyStringify(i - 1, j, maxMove - 1)] % MOD) % MOD;
+    }
+    else
+    {
+        count = (count % MOD + (mp[keyStringify(i - 1, j, maxMove - 1)] = findPathsHelper(maxMove - 1, i - 1, j, m, n, mp) % MOD)) % MOD;
+    }
+    // right
+    if (mp[keyStringify(i, j + 1, maxMove - 1)] != 0)
+    {
+        count = (count % MOD + mp[keyStringify(i, j + 1, maxMove - 1)] % MOD) % MOD;
+    }
+    else
+    {
+        count = (count % MOD + (mp[keyStringify(i, j + 1, maxMove - 1)] = findPathsHelper(maxMove - 1, i, j + 1, m, n, mp) % MOD)) % MOD;
+    }
+    // left
+
+    if (mp[keyStringify(i, j - 1, maxMove - 1)] != 0)
+    {
+        count = (count % MOD + mp[keyStringify(i, j - 1, maxMove - 1)] % MOD) % MOD;
+    }
+    else
+    {
+        count = (count % MOD + (mp[keyStringify(i, j - 1, maxMove - 1)] = findPathsHelper(maxMove - 1, i, j - 1, m, n, mp) % MOD)) % MOD;
+    }
+
+    return mp[key] = count % MOD;
+}
+
+int findPaths(int m, int n, int maxMove, int startRow, int startColumn)
+{
+    unordered_map<string, int> mp;
+    int MOD = 1e9 + 7;
+    return findPathsHelper(maxMove, startRow, startColumn, m, n, mp) % MOD;
+}
+
 int main()
 {
 
     // int n = 3;
     // vector<vector<int>> matrix(n, vector<int>(n, 0));
 
-    // cout<<"Number of ways : "<<coutTheway(matrix,0,0,n);
+    // int stp = 1;
+    // printAllPath(matrix, 0, 0, n, stp);
 
     // printThePath(matrix,0,0,n);
 
     // printPathString(0, 0, n, "");
 
     // vector<vector<char>> maze = {{'.', '+'}};
-    vector<vector<char>> maze = {{'+', '+', '+'}, {'.', '.', '.'}, {'+', '+', '+'}};
+    // vector<vector<char>> maze = {{'+', '+', '+'}, {'.', '.', '.'}, {'+', '+', '+'}};
 
-    cout << "Minimum steps is : " << nearestExit(maze, {1, 0});
+    // cout << "Minimum steps is : " << nearestExit(maze, {1, 0});
+
+    // Escape a Large Maze
+
+    vector<vector<int>> blocked = {};
+
+    vector<int> source = {0, 0};
+
+    vector<int> target = {999999, 999999};
+
+    cout << isEscapePossible(blocked, source, target);
+
     cout << "\nBackTracing";
     return 0;
 }
