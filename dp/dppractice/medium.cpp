@@ -188,6 +188,36 @@ bool predictTheWinner(vector<int> nums)
     return predictTheWinnerHelper(nums, 0, n - 1, 0, 0);
 }
 
+// *********************************************************************
+//  Word Break
+// https://leetcode.com/problems/word-break/description/
+// *********************************************************************
+
+bool wordBreakHelper(string s, vector<string> &wordDict, int i, string tempStr)
+{
+    int n = s.size();
+    int m = tempStr.size();
+
+    if (s == tempStr)
+    {
+        return true;
+    }
+
+    if (m >= n || i < 0)
+    {
+        return false;
+    }
+
+    return wordBreakHelper(s, wordDict, i, tempStr + wordDict[i]) || wordBreakHelper(s, wordDict, i, wordDict[i] + tempStr) ||
+           wordBreakHelper(s, wordDict, i - 1, tempStr);
+}
+
+bool wordBreak(string s, vector<string> &wordDict)
+{
+    int n = wordDict.size();
+    return wordBreakHelper(s, wordDict, n - 1, "");
+}
+
 int main()
 {
 

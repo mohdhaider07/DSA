@@ -208,53 +208,99 @@ int nearestExit(vector<vector<char>> maze, vector<int> entrance)
 // https://leetcode.com/problems/n-queens/description/
 // ====================================================
 
-void solveNQueensHelper(vector<pair<int, int>> &blocked, vector<vector<string>> &board, int i, int j, int q)
+void printBoad(vector<vector<string>> &board)
+{
+    int n = board.size();
+    int m = board[0].size();
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            /* code */
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void solveNQueensHelper(vector<pair<int, int>> &blocked, vector<vector<string>> &board, int i, int j, int &q)
 {
     int n = board.size();
     int m = board[0].size();
 
     // check the posion is occupied or not
-
-    if (q == 0 || board[i][j] == "Q")
+    if (board[i][j] == "Q" || board[i][j] == "+")
     {
+
+        cout << "it is having queen  and also + so returning : " << endl;
+
         return;
     }
 
+    if (q == 0)
+    {
+
+        printBoad(board);
+        cout << "prongting board ";
+        return;
+    }
+
+    int x = 1;
     for (auto pos : blocked)
     {
         if (pos.first == i || pos.second == j || (abs(pos.first - i) == abs(pos.second - j)))
         {
-
-            return;
+            x = 0;
+            cout << "it posiotion is blocked ;  " << i << " " << j << endl;
+            break;
         }
     }
 
-    blocked.push_back({i, j});
-    board[i][j] = "Q";
+    if (x == 1)
+    {
+        blocked.push_back({i, j});
+        board[i][j] = "Q";
+        q--;
+    }
+    else
+    {
+        board[i][j] = "+";
+    }
+
     // down
     if (i < n - 1)
     {
-        solveNQueensHelper(blocked, board, i + 1, j, q - 1);
+        cout << "down" << endl;
+        solveNQueensHelper(blocked, board, i + 1, j, q);
     }
     // up
     if (i > 0)
     {
-        solveNQueensHelper(blocked, board, i - 1, j, q - 1);
+        cout << "up" << endl;
+        solveNQueensHelper(blocked, board, i - 1, j, q);
     }
 
     // right
     if (j < m - 1)
     {
-        solveNQueensHelper(blocked, board, i, j + 1, q - 1);
+        cout << "right" << endl;
+        solveNQueensHelper(blocked, board, i, j + 1, q);
     }
     // left
 
     if (j > 0)
     {
-        solveNQueensHelper(blocked, board, i, j - 1, q - 1);
+        cout << "left" << endl;
+        solveNQueensHelper(blocked, board, i, j - 1, q);
     }
 
-    blocked.pop_back();
+    if (x == 1)
+    {
+        blocked.pop_back();
+        q++;
+    }
+
     board[i][j] = ".";
 }
 
@@ -432,13 +478,13 @@ int main()
 
     // Escape a Large Maze
 
-    vector<vector<int>> blocked = {};
+    // vector<vector<int>> blocked = {};
 
-    vector<int> source = {0, 0};
+    // vector<int> source = {0, 0};
 
-    vector<int> target = {999999, 999999};
+    // vector<int> target = {999999, 999999};
 
-    cout << isEscapePossible(blocked, source, target);
+    solveNQueens(4);
 
     cout << "\nBackTracing";
     return 0;
