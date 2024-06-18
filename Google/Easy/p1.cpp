@@ -8,6 +8,7 @@
 #include <set>
 #include <queue>
 #include <stack>
+#include <climits>
 
 using namespace std;
 
@@ -140,15 +141,152 @@ int remove_duplicate(int a[], int n)
     {
         if (a[j] != a[i])
         {
-            j++;         // Move to the next position
-            a[j] = a[i]; // Update the position with the current element
+            j++; // Move to the next position
         }
+        a[j] = a[i]; // Update the position with the current element
     }
     return j + 1;
 }
+
+bool areIsomorphic(string str1, string str2)
+{
+
+    int n = str1.size();
+    int m = str2.size();
+    if (n != m)
+    {
+        return false;
+    }
+
+    vector<int> v1(26, -1);
+    vector<int> v2(26, -1);
+
+    for (int i = 0; i < n; i++)
+    {
+        int ss = str1[i] - 'a';
+        int tt = str2[i] - 'a';
+
+        if (v1[ss] == -1 && v2[tt] == -1)
+        {
+            v1[ss] = tt;
+            v2[tt] = ss;
+        }
+        else if (v1[ss] != tt || v2[tt] != ss)
+        {
+            return false;
+        }
+    }
+    return true;
+
+    // Your code here
+    return true;
+}
+
+int smallestSubWithSum(int arr[], int n, int x)
+{
+    // Your code goes here
+    int minSize = INT_MAX;
+    int start = 0;
+    int currentSum = 0;
+
+    for (int end = 0; end < n; end++)
+    {
+        // Add current element to currentSum
+        currentSum += arr[end];
+
+        // While currentSum is greater than x, try to minimize the window
+        while (currentSum > x)
+        {
+            minSize = min(minSize, end - start + 1);
+            currentSum -= arr[start];
+            start++;
+        }
+    }
+
+    // If minSize wasn't updated, return 0 to indicate no valid subarray was found
+    return (minSize == INT_MAX) ? 0 : minSize;
+}
+
+long long firstIndex(vector<long long> v, long long x, long long n)
+{
+
+    long long start = 0;
+    long long end = n - 1;
+    long long index = INT_MAX;
+    while (start <= start)
+    {
+        long long mid = (start + end) / 2;
+        if (v[mid] == x)
+        {
+            index = min(index, mid);
+        }
+        if (v[mid] < x)
+        {
+            start = mid + 1;
+        }
+        if (v[mid] >= x)
+        {
+            end = mid - 1;
+        }
+    }
+
+    return index == INT_MAX ? -1 : index;
+}
+long long lastIndex(vector<long long> v, long long x, long long n)
+{
+
+    long long start = 0;
+    long long end = n - 1;
+    long long index = INT_MIN;
+    while (start <= start)
+    {
+        long long mid = (start + end) / 2;
+        if (v[mid] == x)
+        {
+            index = max(index, mid);
+        }
+        if (v[mid] <= x)
+        {
+            start = mid + 1;
+        }
+        if (v[mid] > x)
+        {
+            end = mid - 1;
+        }
+    }
+
+    return index == INT_MIN ? -1 : index;
+}
+
+bool areKAnagrams(string str1, string str2, int k)
+{
+    // code here
+    int n = str1.size();
+    int m = str2.size();
+    if (n != m)
+        return false;
+
+    sort(str1.begin(), str1.end());
+    sort(str2.begin(), str2.end());
+
+    cout << str1 << " " << str2 << endl;
+
+    int c = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (str1[i] != str2[i])
+        {
+            break;
+        }
+        c++;
+    }
+
+    cout << "coutn tis " << c << endl;
+    return (c + k - n) >= 0 ? true : false;
+}
+
 int main()
 {
     cout << "Hello World\n";
-    cout << ispar("{([])}");
     return 0;
 }
