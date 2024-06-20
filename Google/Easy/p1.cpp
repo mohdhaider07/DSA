@@ -285,8 +285,47 @@ bool areKAnagrams(string str1, string str2, int k)
     return (c + k - n) >= 0 ? true : false;
 }
 
+long long int countStrHelper(long long int n, int b, int c)
+{
+    if (n == 1)
+    {
+        if (b > 0 && c > 0)
+        {
+            return 3;
+        }
+        if (b > 0 || c > 0)
+        {
+            return 2;
+        }
+        return 1;
+    }
+    int ans = 0;
+    // if b is allowyed
+    if (b > 0)
+    {
+        ans += countStrHelper(n - 1, b - 1, c);
+    }
+    if (c > 0)
+    {
+        ans += countStrHelper(n - 1, b, c - 1);
+    }
+
+    ans += countStrHelper(n - 1, b, c);
+
+    return ans;
+}
+
+long long int
+countStr(long long int n)
+{
+    // complete the function here
+    return countStrHelper(n, 1, 2);
+}
+
 int main()
 {
     cout << "Hello World\n";
+    cout << countStr(3) << endl;
+
     return 0;
 }
