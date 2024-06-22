@@ -322,6 +322,39 @@ countStr(long long int n)
     return countStrHelper(n, 1, 2);
 }
 
+void generate_binary_string_helper(string s, int i, string str, vector<string> &ans)
+{
+    int n = s.size();
+    if (i >= n)
+    {
+        ans.push_back(str);
+    }
+
+    for (i; i < n; i++)
+    {
+        if (s[i] == '?')
+        {
+            break;
+        }
+        str = str + s[i];
+    }
+
+    if (s[i] == '?')
+    {
+        generate_binary_string_helper(s, i + 1, str + '0', ans);
+        generate_binary_string_helper(s, i + 1, str + '1', ans);
+    }
+}
+
+vector<string> generate_binary_string(string s)
+{
+    // Code here
+    vector<string> ans;
+    generate_binary_string_helper(s, 0, "", ans);
+
+    return ans;
+}
+
 int main()
 {
     cout << "Hello World\n";
