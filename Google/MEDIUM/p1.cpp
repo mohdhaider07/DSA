@@ -2,38 +2,79 @@
 #include <vector>
 using namespace std;
 
-vector<int> subarraySum(vector<int> arr, int n, long long s)
+vector<int> twoSum(vector<int> &nums, int target)
 {
-    // Your code here
-    int end = 0;
-    int start = 0;
-    // long long sum = 0;
-    while (end < n)
+    vector<int> result;
+    for (int i = 0; i < nums.size(); i++)
     {
-        s = s - arr[end];
 
-        while (0 > s)
+        for (int j = i + 1; j < nums.size(); j++)
         {
-            s = s + arr[start];
-            start++;
-        }
-
-        if (0 == s)
-        {
-            if (start > end)
+            if (nums[i] + nums[j] == target)
             {
-                end++;
-                continue;
-            };
-            return {start + 1, end + 1};
+                result.push_back(i);
+                result.push_back(j);
+                return result;
+            }
         }
-        end++;
     }
-    return {-1};
+    return result;
 }
 
+bool dfs(vector<vector<int>> &graph, int node, vector<bool> &vis)
+{
+
+    vis[node] = true;
+
+    for (int i = 0; i < graph[node].size(); i++)
+    {
+        if (vis[graph[node][i]] || !dfs(graph, graph[node][i], vis))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool canFinish(int numCourses, vector<vector<int>> prerequisites)
+{
+    vector<vector<int>> graph(numCourses);
+    vector<bool> vis(numCourses, false);
+    for (vector<int> node : prerequisites)
+    {
+        graph[node[1]].push_back(node[0]);
+    }
+    // pring graph
+    for (int i = 0; i < graph.size(); i++)
+    {
+        cout << i << " :{ ";
+        for (int j = 0; j < graph[i].size(); j++)
+        {
+            cout << graph[i][j] << " ";
+        }
+        cout << "}" << endl;
+    }
+
+    for (int i = 0; i < graph.size(); i++)
+    {
+        if (vis[i])
+            continue;
+
+        bool flag = dfs(graph, i, vis);
+
+        if (flag == false)
+        {
+            return flag;
+        }
+    }
+
+    return true;
+}
 int main()
 {
     cout << "Hello, World!" << endl;
+    cout << canFinish(2, {{0, 1}}) << endl;
+
     return 0;
 }
