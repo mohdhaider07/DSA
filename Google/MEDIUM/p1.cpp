@@ -78,8 +78,8 @@ bool canFinish(int numCourses, vector<vector<int>> prerequisites)
 
 vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
 {
-    // Code here
     // min priority queue this queue will store (dis, node)
+    // Code here
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     // initilize a distance vector
     vector<int> dis(V, INT_MAX);
