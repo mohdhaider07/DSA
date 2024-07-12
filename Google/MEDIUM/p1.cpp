@@ -1,5 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <climits>
+
 using namespace std;
 
 vector<int> twoSum(vector<int> &nums, int target)
@@ -55,6 +58,7 @@ bool canFinish(int numCourses, vector<vector<int>> prerequisites)
         }
         cout << "}" << endl;
     }
+    // one more fore loop
 
     for (int i = 0; i < graph.size(); i++)
     {
@@ -71,6 +75,39 @@ bool canFinish(int numCourses, vector<vector<int>> prerequisites)
 
     return true;
 }
+
+vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
+{
+    // Code here
+    // min priority queue this queue will store (dis, node)
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    // initilize a distance vector
+    vector<int> dis(V, INT_MAX);
+    pq.push({0, S});
+    dis[S] = 0;
+    while (!pq.empty())
+    {
+        pair<int, int> f = pq.top();
+        // distance of node form source
+        int dist = f.first;
+        // distance of the node
+        int node = f.second;
+        pq.pop();
+        for (auto it : adj[node])
+        {
+            int n = it[0];
+            int w = it[1];
+            if (dist + w < dis[n])
+            {
+                dis[n] = dist + w;
+                pq.push({dist + w, n});
+            }
+        }
+    }
+
+    return dis;
+}
+
 int main()
 {
     cout << "Hello, World!" << endl;
