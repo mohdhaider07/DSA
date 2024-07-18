@@ -3,47 +3,127 @@
 using namespace std;
 // trie node
 // /***********************************THIS PROGRAM WORKING FILE ISSUE WITH THE COMPILER       *////////////////////
-class Node
+
+class TrieNode
 {
 public:
-    Node *child[26];
-    bool isTerminal;
-    Node()
-    {
-        isTerminal = false;
-        for (int i = 0; i < 26; i++)
-        {
-            child[i] == NULL;
-        }
-    }
+    vector<TrieNode *> children;
+    bool isEndOfWord;
+
+    TrieNode() : children(26, nullptr), isEndOfWord(false) {}
 };
 
-void insertDir(string word, Node *trie)
+class Trie
 {
-    int n = word.size();
-    for (int i = 0; i < n; i++)
-    {
-        if (trie->child[word[i] - 'A'] == NULL)
-        {
-            Node *newNode = new Node();
-            trie->child[word[i] - 'A'] = newNode;
-        }
-        trie = trie->child[word[i] - 'A'];
-    }
-    trie->isTerminal = true;
-}
+    TrieNode *root;
 
-bool searchDir(string word, Node *trie)
-{
-    int n = word.size();
-    for (int i = 0; i < n; i++)
+public:
+    Trie()
     {
-        if (trie->child[word[i] - 'A'] == NULL)
-            return false;
-        trie = trie->child[word[i] - 'A'];
+        root = new TrieNode();
     }
-    return trie->isTerminal;
-}
+    // Insert Word
+    void insertWord(string word)
+    {
+        TrieNode *node = root;
+        for (int i = 0; i < word.size(); i++)
+        {
+            int index = word[i] - 'a';
+            cout << "index is " << index << endl;
+            if (node->children[index] == NULL)
+            {
+                TrieNode *newNode = new TrieNode();
+                node->children[index] = newNode;
+            }
+            node = node->children[index];
+        }
+
+        node->isEndOfWord = true;
+    }
+
+    bool searchWord(string word)
+    {
+        TrieNode *node = root;
+        for (int i = 0; i < word.size(); i++)
+        {
+
+            int index = word[i] - 'a';
+            if (node->children[index] == NULL)
+            {
+                return false;
+            }
+            node = node->children[index];
+        }
+        return node->isEndOfWord;
+    }
+
+    bool startWith(string word)
+    {
+        TrieNode *node = root;
+        for (int i = 0; i < word.size(); i++)
+        {
+            int index = word[i] - 'a';
+            if (node->children[index] == NULL)
+            {
+                return false;
+            }
+            node = node->children[index];
+        }
+        return true;
+    }
+    int countStartWith(string word)
+    {
+        TrieNode *node = root;
+        int count = 0;
+        for (int i = 0; i < word.size(); i++)
+        {
+            int index = word[i] - 'a';
+            if (node->children[index] == NULL)
+                return 0;
+
+            node = node->children[index];
+        }
+
+        for (int i = 0; i < node->children.size(); i++)
+        {
+            if (node->children[i] != NULL)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    bool eraseHelper(string word, int depth, TrieNode *node)
+    {
+        if (!node)
+            return false;
+        if (depth == word.size())
+        {
+            if (!node->isEndOfWord)
+                return false;
+
+            node->isEndOfWord = false;
+            return node->children == vector<TrieNode *>(26, NULL);
+        }
+
+        int index = word[depth] - 'a';
+
+        if (eraseHelper(word, depth + 1, node->children[index]))
+        {
+            delete node->children[index];
+            node->children[index] = NULL;
+
+            return !node->isEndOfWord && node->children == vector<TrieNode *>(26, NULL);
+        }
+        return false;
+    }
+    void erase(string word)
+    {
+        TrieNode *node = root;
+        cout << "deleted or not " << eraseHelper(word, 0, node);
+    }
+};
 
 int main()
 {
@@ -54,16 +134,19 @@ int main()
     v.push_back("HOW");
     v.push_back("THESE");
     // creating new Node
+    Trie trie;
+    trie.insertWord("haider");
+    trie.insertWord("sadiq");
+    trie.insertWord("saif");
+    trie.insertWord("tauseef");
 
-    Node *trie = new Node();
-    cout << "\nee";
-    for (int i = 0; i < v.size(); i++)
-    {
-        insertDir(v[i], trie);
-    }
-    cout << searchDir("DAD", trie) << endl;
-    cout << searchDir("DOSE", trie) << endl;
-    cout << "Program End";
+    cout << "is the haider exist in the word " << trie.searchWord("haiderd") << endl;
+    cout << "is the hai start word exist " << trie.startWith("haider") << endl;
+    cout << "count the sa start word " << trie.countStartWith("sa") << endl;
+
+    cout << "eraseing the word haider ";
+    trie.erase("haider");
+    cout << "is the hai start word exist " << trie.startWith("haider") << endl;
 
     return 0;
 }
