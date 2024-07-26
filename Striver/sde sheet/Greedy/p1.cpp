@@ -125,6 +125,73 @@ vector<int> JobScheduling(Job arr[], int n)
     return {jobCount, profitSum};
 }
 
+struct Item
+{
+    int value;
+    int weight;
+};
+
+double fractionalKnapsack(int w, Item arr[], int n)
+{
+    // Your code here
+    vector<pair<int, pair<int, int>>> items;
+
+    for (int i = 0; i < n; i++)
+    {
+        int fraction = arr[i].value / arr[i].weight;
+        items.push_back({fraction, {arr[i].value, arr[i].weight}});
+    }
+    sort(items.begin(), items.end());
+
+    double value = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (items[i].second.second <= w)
+        {
+            value += items[i].second.first;
+            w = w - items[i].second.second;
+        }
+        else if (w > 0)
+        {
+            value += items[i].first * w;
+            w = 0;
+        }
+        else if (w == 0)
+        {
+            break;
+        }
+    }
+    return value;
+}
+
+int findContentChildren(vector<int> &g, vector<int> &s)
+{
+    sort(g.begin(), g.end());
+    sort(s.begin(), s.end());
+
+    int j = 0;
+
+    int count = 0;
+    for (int i = 0; i < g.size(); i++)
+    {
+        bool flag = false;
+        while (!flag && j < s.size())
+        {
+            if (s[j] >= g[i])
+            {
+                count++;
+                j++;
+                flag = true;
+            }
+            else
+            {
+                j++;
+            }
+        }
+    }
+}
+
 int main()
 {
     int s[] = {1, 3, 0, 5, 8, 5};
