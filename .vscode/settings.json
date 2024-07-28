@@ -5,6 +5,10 @@
 		"unordered_map": "cpp",
 		"map": "cpp",
 		"ostream": "cpp",
-		"functional": "cpp"
+		"functional": "cpp",
+		"valarray": "cpp",
+		"bitset": "cpp",
+		"set": "cpp",
+		"format": "cpp"
 	}
 }
