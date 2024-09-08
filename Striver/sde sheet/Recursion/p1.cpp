@@ -29,6 +29,12 @@ void permuteHelper(vector<int> &nums,int index,vector<vector<int>>&ans){
         return ans;
     }
 
+// N queen problem 
+ vector<vector<string>> solveNQueens(int n) {
+        
+    }
+
+
 int main()
 {
     cout << "Enter the size of the array: \n";
